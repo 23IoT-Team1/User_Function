@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/container"
+    >
+
+    <TextView
+        android:id="@+id/degree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Heading : 0.0"
+        android:textSize="20dp"
+        />
+
+    <RelativeLayout
+        android:id="@+id/pointer_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+        <!--이미지 출처 아래서 픽셀 교체 가능-->
+        <!--https://www.flaticon.com/kr/free-icon/compass_156993?term=%EB%82%98%EC%B9%A8%EB%B0%98&page=1&position=19&origin=search&related_id=156993-->
+        <ImageView
+            android:id="@+id/pointer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/pointer"
+            android:layout_centerInParent="true"
+            />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtSteps"
+        android:layout_weight="1"
+        android:text="Not start"
+        android:textSize="60dp"
+        android:textAlignment="center"
+        />
+    <Button
+        android:id="@+id/btnReset"
+        android:text="reset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+</LinearLayout>
