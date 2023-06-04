@@ -23,6 +23,8 @@ public class RotateAnimationHelper {
         pointerContainer.post(new Runnable() {
             @Override
             public void run() {
+                //pointer가 LinearLayout 내부의 RelativeLayout에 있어
+                //pointer의 상대적 위치를 측정할 때 RelativeLayout을 이용함
                 containerWidth = pointerContainer.getWidth();
                 containerHeight = pointerContainer.getHeight();
                 pivotX = pointer.getX();

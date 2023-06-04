@@ -2,22 +2,20 @@
 //츨처 : https://stackoverflow.com/questions/67377284/onsensorchanged-is-not-triggering-for-the-step-detect-sensor
 //step detector 코드 수정과 걸음 수 방법 참고 방법
 //출처 : https://ppizil.tistory.com/entry/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-Service-Binding%EA%B3%BC-StepCount-%EB%A7%8C%EB%B3%B4%EA%B8%B0
-
 //image와 container의 반환값 해결방법
 //출처 : https://stackoverflow.com/questions/3591784/views-getwidth-and-getheight-returns-0
 //view의 좌표 개념 참고 사이트
 //https://velog.io/@hwi_chance/Android-%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-View%EC%9D%98-%EC%9C%84%EC%B9%98%EC%99%80-%ED%81%AC%EA%B8%B0
 package com.gachon.userapp;
 
-
+import android.view.View;
+import android.widget.Button;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -28,12 +26,11 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
     //to use step function
-    Button btnReset;
+
     private SensorManager sensorManager;
     private Sensor stepSensor, magnetormeter,accelermeter;
     private TextView txtSteps,txtdegree;
     private ImageView pointer;
-    private int stepCounter=0;
 
     //to use compass function
     private float[] mR = new float[9];
@@ -43,10 +40,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float[] mOrientation = new float[3];
     private float mCurrentDegree = 0f;
     private float azimuthunDegress= 0f;
-    private float pivotX, pivotY;
-    private float containerWidth, containerHeight;
     private RelativeLayout pointer_container;
     private RotateAnimationHelper rotateAnimationHelper;
+
+    //Button btnReset;
+    //private int stepCounter=0;
+
 
 
     @Override
@@ -61,8 +60,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         magnetormeter = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         accelermeter = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         //layout
-        txtSteps = findViewById(R.id.txtSteps);
-        btnReset = findViewById(R.id.btnReset);
+
         txtdegree=findViewById(R.id.degree);
         pointer=findViewById(R.id.pointer);
         pointer_container =findViewById(R.id.pointer_container);
@@ -70,25 +68,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //RotateAnimationHelper class
         rotateAnimationHelper = new RotateAnimationHelper(pointer, pointer_container);
 
-        //step check 
+        //step sensor check
+        // txtSteps = findViewById(R.id.txtSteps);
+        // btnReset = findViewById(R.id.btnReset);
         // txtSteps.setText(String.valueOf(stepCounter));
 
-
-        pointer_container.post(new Runnable() {
-            @Override
-            public void run() {
-                //pointer가 LinearLayout 내부의 RelativeLayout에 있어 
-                //pointer의 상대적 위치를 측정할 때 RelativeLayout을 이용함
-                pointer.setImageResource(R.drawable.pointer);
-                containerWidth = pointer_container.getWidth();
-                containerHeight = pointer_container.getHeight();
-                pivotX =pointer.getX();
-                pivotY =pointer.getY();
-            }
-        });
-
-
         //reset button click
+        /*
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,10 +82,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 txtSteps.setText(String.valueOf(stepCounter));
             }
         });
-
+         */
     }
-
-
     @Override
     protected void onResume()
     {
@@ -148,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
     }
-
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
