@@ -2,8 +2,7 @@
 //츨처 : https://stackoverflow.com/questions/67377284/onsensorchanged-is-not-triggering-for-the-step-detect-sensor
 //step detector 코드 수정과 걸음 수 방법 참고 방법
 //출처 : https://ppizil.tistory.com/entry/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-Service-Binding%EA%B3%BC-StepCount-%EB%A7%8C%EB%B3%B4%EA%B8%B0
-//나침반 코드 참고
-//출처 : https://copycoding.tistory.com/tag/TYPE_ACCELEROMETER
+
 //image와 container의 반환값 해결방법
 //출처 : https://stackoverflow.com/questions/3591784/views-getwidth-and-getheight-returns-0
 //view의 좌표 개념 참고 사이트
@@ -18,8 +17,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -49,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float pivotX, pivotY;
     private float containerWidth, containerHeight;
     private RelativeLayout pointer_container;
+    private RotateAnimationHelper rotateAnimationHelper;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,13 +66,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         txtdegree=findViewById(R.id.degree);
         pointer=findViewById(R.id.pointer);
         pointer_container =findViewById(R.id.pointer_container);
+        
+        //RotateAnimationHelper class
+        rotateAnimationHelper = new RotateAnimationHelper(pointer, pointer_container);
 
-        txtSteps.setText(String.valueOf(stepCounter));
+        //step check 
+        // txtSteps.setText(String.valueOf(stepCounter));
 
 
         pointer_container.post(new Runnable() {
             @Override
             public void run() {
+                //pointer가 LinearLayout 내부의 RelativeLayout에 있어 
+                //pointer의 상대적 위치를 측정할 때 RelativeLayout을 이용함
                 pointer.setImageResource(R.drawable.pointer);
                 containerWidth = pointer_container.getWidth();
                 containerHeight = pointer_container.getHeight();
@@ -115,11 +121,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor == stepSensor) {
+        //stepCounter
+        /*if (event.sensor == stepSensor) {
                 stepCounter++;
                 txtSteps.setText(String.valueOf(stepCounter) + "\n" + String.valueOf((float) (stepCounter * 0.6)) + " m");
         }
-        else if (event.sensor == magnetormeter) {
+        else */
+        if (event.sensor == magnetormeter) {
 
             //System.arraycopy(event.values, 0, mLastMagnetormeter, 0, 2);
             mLastMagnetormeter[0] = event.values[0];
@@ -133,15 +141,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             txtdegree.setText("Heading : " + Float.toString(azimuthunDegress) + " degrees");
 
             //rotate
-            RotateAnimation ra = new RotateAnimation(
-                    mCurrentDegree,
-                    -azimuthunDegress,
-                    Animation.RELATIVE_TO_SELF, pivotX / containerWidth,
-                    Animation.RELATIVE_TO_SELF, pivotY / containerHeight
-            );
-            ra.setDuration(10000);
-            ra.setFillAfter(true);
-            pointer.startAnimation(ra);
+            rotateAnimationHelper.rotate(mCurrentDegree, -azimuthunDegress, 1000);
             mCurrentDegree =- azimuthunDegress;
         } else if (event.sensor == accelermeter) {
             System.arraycopy(event.values, 0, mLastAccelerometer, 0, event.values.length);
